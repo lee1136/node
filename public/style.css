@@ -1,0 +1,97 @@
+/* 전체 페이지 어둡게 처리 */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85); /* 어두운 배경 */
+    font-family: Arial, sans-serif;
+}
+
+/* 중앙에 위치한 로그인 박스 */
+.login-container {
+    position: relative;
+    width: 350px;
+    padding: 20px;
+    background-color: transparent; /* 배경 투명 */
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* 로그인 폼 스타일 */
+form h2 {
+    color: royalblue; /* 포인트 색상 */
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: white;
+}
+
+/* 텍스트 입력 필드에서 테두리와 배경 제거, 필드 폭 줄이기 */
+form input {
+    width: 70%; /* 폭을 70%로 줄임 (필요에 따라 더 줄일 수 있음) */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-bottom: 1px solid white; /* 하단 흰색 */
+    background-color: transparent; /* 투명 배경 */
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+form input:focus {
+    border-bottom: 1px solid royalblue;
+}
+
+/* 로그인 버튼 스타일 */
+form button {
+    width: 70%; /* 버튼 폭도 동일하게 설정 */
+    padding: 10px;
+    background-color: royalblue;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #0047ab;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* 오버레이 */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+/* 부드러운 페이드 인 효과 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

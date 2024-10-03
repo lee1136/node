@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Detail</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <header>
+        <h1 id="post-name">Loading...</h1> <!-- 게시물 이름(품번) 표시 -->
+        <div class="header-buttons">
+            <button id="home-btn">Home</button> <!-- Home 버튼 -->
+            <button id="edit-btn">Edit</button> <!-- Edit 버튼 -->
+            <button id="delete-btn">Delete</button> <!-- 삭제 버튼 -->
+        </div>
+    </header>
+
+    <section id="main-media-container"></section> <!-- 메인 동영상/이미지 표시 -->
+    <section id="thumbnail-gallery"></section> <!-- 미디어 썸네일 갤러리 -->
+
+    <section id="post-info"></section> <!-- 게시물 정보 표시 -->
+
+    <script type="module" src="firebaseConfig.js"></script>
+    <script type="module" src="detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,425 @@
+/* 전체 페이지 스타일 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f9; /* 밝은 회색 배경 */
+    color: #333; /* 기본 텍스트 색상 */
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s ease; /* 부드러운 배경 전환 */
+}
+
+/* 헤더 스타일 */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #002366; /* 로얄블루 색상 */
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+/* 헤더 버튼 컨테이너 (세로 정렬) */
+.header-buttons {
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    gap: 10px; /* 버튼 간격 */
+}
+
+/* 업로드 버튼과 회원가입 버튼 스타일 */
+.upload-btn, .signup-btn {
+    background-color: #0056b3; /* 로얄블루 계열의 버튼 색상 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upload-btn:hover, .signup-btn:hover {
+    background-color: #003d80; /* 호버 시 더 짙은 로얄블루 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 호버 시 그림자 추가 */
+}
+
+/* 뒤로가기 버튼 디자인 */
+#back-btn {
+    background-color: #0056b3; /* 로얄블루 계열의 버튼 색상 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px; /* 부드러운 모서리 */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#back-btn:hover {
+    background-color: #003d80; /* 호버 시 더 짙은 로얄블루 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 호버 시 그림자 추가 */
+}
+
+#home-btn, #edit-btn {
+    background-color: #0056b3; /* 로얄블루 계열의 버튼 색상 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#home-btn:hover, #edit-btn:hover {
+    background-color: #003d80; /* 호버 시 더 짙은 로얄블루 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 호버 시 그림자 추가 */
+}
+
+/* 검색창을 헤더 아래 좌측에 배치 */
+#search-container {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    padding: 20px 40px;
+}
+
+#search-input {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+}
+
+#search-input:focus {
+    border-color: #0056b3;
+}
+
+/* 게시물 그리드 설정 */
+#post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 40px;
+    justify-items: center;
+}
+
+/* 게시물 아이템 스타일 */
+.post-item {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-bottom: 100%; /* 정사각형 모양 */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* 부드러운 모서리 */
+    background-color: rgba(0, 0, 0, 0.1); /* 게시물 기본 어두운 배경 추가 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.post-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease, transform 0.3s ease; /* 이미지 전환 */
+}
+
+.post-item:hover {
+    background-color: rgba(0, 0, 0, 0.2); /* 마우스 오버 시 더 어두워짐 */
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 호버 시 부드러운 그림자 확대 */
+}
+
+.post-item:hover img {
+    opacity: 0.8;
+    transform: scale(1.1); /* 이미지 확대 효과 */
+}
+
+/* 페이지네이션 버튼 스타일 */
+.pagination-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.next-page-btn {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.next-page-btn:hover {
+    background-color: #003d80;
+}
+
+/* 반응형 그리드 설정 */
+@media (min-width: 1200px) {
+    #post-grid {
+        grid-template-columns: repeat(7, 1fr); /* 1200px 이상에서 7개 */
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    #post-grid {
+        grid-template-columns: repeat(5, 1fr); /* 992px ~ 1199px */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    #post-grid {
+        grid-template-columns: repeat(3, 1fr); /* 768px ~ 991px */
+    }
+}
+
+@media (max-width: 767px) {
+    #post-grid {
+        grid-template-columns: repeat(2, 1fr); /* 767px 이하 */
+    }
+}
+
+/* 업로드 섹션 스타일 */
+#upload-section {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#upload-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+#upload-form input, #upload-form select, #upload-form textarea {
+    padding: 8px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* 제품 번호 필드를 한 줄에 배치 */
+#product-number-inputs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 체크박스 타입 스타일 */
+#type-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+/* 체크박스 선택 시 글자 진하게, 선택 안하면 흐리게 */
+#type-container label {
+    opacity: 0.5;
+    font-weight: normal;
+    transition: opacity 0.3s, font-weight 0.3s;
+}
+
+#type-container input:checked + label {
+    opacity: 1;
+    font-weight: bold;
+}
+
+/* Q 체크박스 선택 시 스타일 변경 */
+#q-label {
+    opacity: 0.5;
+    transition: opacity 0.3s ease, font-weight 0.3s ease;
+}
+
+#q-check:checked + #q-label {
+    font-weight: bold; /* Q 체크 시 글자 진하게 */
+    opacity: 1;
+}
+
+/* 사이즈와 중량을 같은 줄에 배치 */
+#size-weight-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+#size-container, #weight-container {
+    flex: 1;
+}
+
+/* 사이즈와 중량 필드 크기를 3분의 1로 줄임 */
+#size, #weight {
+    width: 33%;
+}
+
+/* 미리보기 그리드 스타일 */
+#preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#preview-grid img, #preview-grid video {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+#preview-grid img.selected, #preview-grid video.selected {
+    border-color: #002366; /* 선택된 썸네일에 로얄블루 테두리 */
+}
+
+/* 제출 버튼 스타일 */
+#upload-form button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#upload-form button:hover {
+    background-color: #003d80;
+}
+
+/* 로딩 오버레이 스타일 */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* 로딩 메시지 스타일 */
+.loading-message {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* 메인 미디어 컨테이너 */
+#main-media-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#main-media-container video,
+#main-media-container img {
+    width: 60%; /* 동영상 및 이미지 크기 */
+    max-width: 500px; /* 최대 크기 설정 */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+}
+
+/* 썸네일 갤러리 */
+#thumbnail-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* 각 이미지 간격 */
+    margin-top: 20px;
+}
+
+#thumbnail-gallery img {
+    width: 80px; /* 작은 이미지 크기 */
+    height: auto;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+#thumbnail-gallery img:hover {
+    border-color: #002366; /* 호버 시 로얄블루 테두리 */
+}
+
+/* 정보란을 중앙에 배치하고, 텍스트는 왼쪽 정렬 */
+#post-info {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto; /* 수평 중앙 정렬 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+}
+
+#post-info p {
+    font-size: 18px;
+    margin-bottom: 10px;
+    line-height: 1.5; /* 텍스트 간격 조정 */
+}
+
+/* 반응형 미디어 설정 */
+@media (max-width: 600px) {
+    #main-media-container video,
+    #main-media-container img {
+        width: 100%; /* 작은 화면에서 미디어 파일이 화면에 맞게 조정 */
+        height: auto;
+    }
+}
+
+/* 수정 가능한 폼 섹션 스타일 */
+#edit-info {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#edit-info label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#edit-info input, 
+#edit-info textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+/* 제출 버튼 스타일 */
+#edit-info button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#edit-info button:hover {
+    background-color: #003d80;
+}
