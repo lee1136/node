@@ -6,13 +6,13 @@ import { getStorage } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-st
 
 // Firebase 프로젝트 설정 (Firebase Console에서 복사한 설정 값)
 const firebaseConfig = {
-  apiKey: "AIzaSyDFysg8I_qKtDqDJLWg1_npTPBWRMM_5WY",
-  authDomain: "jjji-4240b.firebaseapp.com",
-  projectId: "jjji-4240b",
-  storageBucket: "jjji-4240b.appspot.com",
-  messagingSenderId: "876101785840",
-  appId: "1:876101785840:web:6e58681ea9c9780e454a35",
-  measurementId: "G-03999XR4JS"
+  apiKey: "AIzaSyCabtdWlXxsBCHvOehJaJa3PcANGwhDWjo",
+  authDomain: "ekdlth-1760c.firebaseapp.com",
+  projectId: "ekdlth-1760c",
+  storageBucket: "ekdlth-1760c.appspot.com",
+  messagingSenderId: "224352917479",
+  appId: "1:224352917479:web:26c5d44ffa897b4558cf42",
+  measurementId: "G-ZQE61NRX9K"
 };
 
 // Firebase 앱 초기화
