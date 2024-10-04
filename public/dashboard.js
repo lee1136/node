@@ -2,7 +2,7 @@ import { db, auth } from './firebaseConfig.js';
 import { collection, getDocs, query, where, limit, startAfter, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-let isAdmin = null;
+let isAdmin = false;
 let lastVisible = null; // 마지막으로 로드한 게시물의 참조를 저장
 const pageSize = 2; // 한 페이지당 게시물 수
 let currentQuery = null; // 현재 쿼리 저장 (검색 쿼리 및 Type 필터링 포함)
