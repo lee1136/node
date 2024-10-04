@@ -1,6 +1,6 @@
 // Firestore 모듈 불러오기
 import { db } from './firebaseConfig.js';
-import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; // Firestore 모듈
 
 // 게시물 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
@@ -21,15 +21,17 @@ const loadPostDetail = async () => {
     try {
         // Firestore에서 게시물 정보 가져오기
         const postDoc = await getDoc(doc(db, "posts", postId));
+        
         if (postDoc.exists()) {
             const postData = postDoc.data();
             
-            // productNumber 확인
-            console.log('Product Number:', postData.productNumber);
+            // productNumber 필드 확인
+            console.log('Firestore Document Data:', postData); // 전체 데이터 확인용
+            console.log('Product Number:', postData.productNumber); // productNumber 필드 확인
             
-            // 게시물 이름(품번) 설정
+            // productNumber가 존재하지 않으면 No Product Number 표시
             postNameElement.textContent = postData.productNumber || "No Product Number";
-
+            
             // 메인 미디어 표시
             if (postData.media && postData.media.length > 0) {
                 const mainMediaURL = postData.media[0];
