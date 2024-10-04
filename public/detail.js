@@ -1,3 +1,7 @@
+// Firestore 모듈 불러오기
+import { db } from './firebaseConfig.js';
+import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; // getDoc 및 deleteDoc 가져오기
+
 // 게시물 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('id');
