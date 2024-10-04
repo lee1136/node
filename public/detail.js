@@ -1,7 +1,3 @@
-// Firestore 모듈 불러오기
-import { db } from './firebaseConfig.js';
-import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; // Firestore 모듈
-
 // 게시물 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('id');
@@ -25,12 +21,8 @@ const loadPostDetail = async () => {
         if (postDoc.exists()) {
             const postData = postDoc.data();
             
-            // productNumber 필드 확인
-            console.log('Firestore Document Data:', postData); // 전체 데이터 확인용
-            console.log('Product Number:', postData.productNumber); // productNumber 필드 확인
-            
-            // productNumber가 존재하지 않으면 No Product Number 표시
-            postNameElement.textContent = postData.productNumber || "No Product Number";
+            // productNumber 대신 name 필드로 변경
+            postNameElement.textContent = postData.name || "No Product Name"; // name 필드를 사용
             
             // 메인 미디어 표시
             if (postData.media && postData.media.length > 0) {
@@ -49,7 +41,7 @@ const loadPostDetail = async () => {
 
             // 게시물 정보 표시
             postInfoSection.innerHTML = `
-                <p><strong>Product Number:</strong> ${postData.productNumber || 'N/A'}</p>
+                <p><strong>Product Name:</strong> ${postData.name || 'N/A'}</p>
                 <p><strong>Type:</strong> ${Array.isArray(postData.type) ? postData.type.join(', ') : postData.type || 'N/A'}</p>
                 <p><strong>Size:</strong> ${postData.size || 'N/A'}</p>
                 <p><strong>Weight:</strong> ${postData.weight || 'N/A'}g</p>
