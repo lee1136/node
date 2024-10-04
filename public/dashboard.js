@@ -97,7 +97,8 @@ const checkAdminPrivileges = async (user) => {
     try {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
-            isAdmin = userDoc.data().isAdmin || false;
+            // Firestore의 admin 필드를 사용하여 관리자 여부 확인
+            isAdmin = userDoc.data().admin || false;
             console.log('Admin status:', isAdmin); // 관리자인지 확인
 
             // 관리자 권한에 따라 버튼을 제어 (버튼을 관리자만 볼 수 있도록)
