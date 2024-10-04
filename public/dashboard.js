@@ -1,5 +1,6 @@
 import { db } from './firebaseConfig.js';
 import { collection, getDocs, query, where, limit, startAfter } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 let lastVisible = null; // 마지막으로 로드한 게시물의 참조를 저장
 const pageSize = 2; // 한 페이지당 게시물 수
@@ -93,10 +94,43 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
     }
 };
 
+// 관리자 권한 확인 함수
+const checkAdmin = async () => {
+    return new Promise((resolve, reject) => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists() && userDoc.data().isAdmin) {
+                    resolve(true); // 관리자
+                } else {
+                    resolve(false); // 관리자 아님
+                }
+            } else {
+                resolve(false); // 로그인하지 않음
+            }
+        });
+    });
+};
+
 // 페이지가 로드된 후에 이벤트 리스너 및 초기 데이터를 불러옴
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // 게시물 목록 로드
     loadPosts();
+
+    // 관리자 권한 확인
+    const isAdmin = await checkAdmin();
+
+    const uploadButton = document.getElementById('upload-btn');
+    const signupButton = document.getElementById('signup-btn');
+
+    if (isAdmin) {
+        uploadButton.style.display = 'block';
+        signupButton.style.display = 'block';
+    } else {
+        uploadButton.style.display = 'none';
+        signupButton.style.display = 'none';
+    }
 
     // 검색 기능 처리
     const searchInput = document.getElementById('search-input');
@@ -112,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 업로드 버튼 클릭 시 업로드 페이지로 이동
-    const uploadButton = document.getElementById('upload-btn');
     if (uploadButton) {
         uploadButton.addEventListener('click', () => {
             window.location.href = 'upload.html'; // 업로드 페이지로 이동
@@ -120,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
-    const signupButton = document.getElementById('signup-btn');
     if (signupButton) {
         signupButton.addEventListener('click', () => {
             window.location.href = 'signup.html';  // 회원가입 페이지로 이동
