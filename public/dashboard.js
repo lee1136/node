@@ -100,16 +100,16 @@ const checkAdminPrivileges = async (user) => {
             isAdmin = userDoc.data().isAdmin || false;
             console.log('Admin status:', isAdmin); // 관리자인지 확인
 
-            // 버튼 표시 여부 설정
+            // 관리자 권한에 따라 버튼을 제어 (버튼을 관리자만 볼 수 있도록)
             const uploadButton = document.getElementById('upload-btn');
             const signupButton = document.getElementById('signup-btn');
 
-            if (!isAdmin) {
-                if (uploadButton) uploadButton.style.display = 'none';
-                if (signupButton) signupButton.style.display = 'none';
-            } else {
+            if (isAdmin) {
                 if (uploadButton) uploadButton.style.display = 'block';
                 if (signupButton) signupButton.style.display = 'block';
+            } else {
+                if (uploadButton) uploadButton.style.display = 'none';
+                if (signupButton) signupButton.style.display = 'none';
             }
         }
     } catch (error) {
@@ -119,16 +119,18 @@ const checkAdminPrivileges = async (user) => {
 
 // 페이지가 로드된 후에 이벤트 리스너 및 초기 데이터를 불러옴
 document.addEventListener('DOMContentLoaded', () => {
+    // 버튼을 숨기고 시작 (관리자 확인 후에만 버튼 표시)
+    const uploadButton = document.getElementById('upload-btn');
+    const signupButton = document.getElementById('signup-btn');
+    if (uploadButton) uploadButton.style.display = 'none';
+    if (signupButton) signupButton.style.display = 'none';
+
     // Firebase 인증 상태 변화 감지
     onAuthStateChanged(auth, (user) => {
         if (user) {
             checkAdminPrivileges(user);  // 관리자 여부 확인
         } else {
             console.log('User is not signed in.');
-            const uploadButton = document.getElementById('upload-btn');
-            const signupButton = document.getElementById('signup-btn');
-            if (uploadButton) uploadButton.style.display = 'none';
-            if (signupButton) signupButton.style.display = 'none';
         }
     });
 
@@ -149,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 업로드 버튼 클릭 시 업로드 페이지로 이동
-    const uploadButton = document.getElementById('upload-btn');
     if (uploadButton) {
         uploadButton.addEventListener('click', () => {
             window.location.href = 'upload.html'; // 업로드 페이지로 이동
@@ -157,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
-    const signupButton = document.getElementById('signup-btn');
     if (signupButton) {
         signupButton.addEventListener('click', () => {
             window.location.href = 'signup.html';  // 회원가입 페이지로 이동
