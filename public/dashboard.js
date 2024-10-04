@@ -126,14 +126,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Firebase 인증 상태 변화 감지
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            checkAdminPrivileges(user);  // 관리자 여부 확인
+            checkAdminPrivileges(user);  // 관리자 여부 확인 후 버튼 제어
+            // 게시물 목록 로드
+            loadPosts();
         } else {
             console.log('User is not signed in.');
+            // 로그아웃된 경우 버튼 숨기기
+            const uploadButton = document.getElementById('upload-btn');
+            const signupButton = document.getElementById('signup-btn');
+            if (uploadButton) uploadButton.style.display = 'none';
+            if (signupButton) signupButton.style.display = 'none';
         }
     });
-
-    // 게시물 목록 로드
-    loadPosts();
 
     // 검색 기능 처리
     const searchInput = document.getElementById('search-input');
