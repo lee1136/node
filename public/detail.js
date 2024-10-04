@@ -1,6 +1,6 @@
+// Firestore 모듈 불러오기
 import { db } from './firebaseConfig.js';
-import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { checkAdminPermission } from './checkAdminPermission.js';
+import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; // getDoc 및 deleteDoc 가져오기
 
 // 게시물 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
@@ -19,17 +19,30 @@ const loadPostDetail = async () => {
     }
 
     try {
-        const postDoc = await getDoc(doc(db, "posts", postId));
+        // Firestore에서 게시물 정보 가져오기
+        const postDoc = await getDoc(doc(db, "posts", postId)); // getDoc을 사용하여 문서 가져오기
         if (postDoc.exists()) {
             const postData = postDoc.data();
-            postNameElement.textContent = postData.name || "No Product Number";
+            postNameElement.textContent = postData.name || "No Product Name"; // productNumber 대신 name 필드 사용
 
-            // 미디어 및 게시물 정보 표시
-            displayMainMedia(postData.media[0]);
-            postData.media.slice(1).forEach((mediaURL, index) => createThumbnail(mediaURL, index));
+            // 메인 미디어 표시
+            if (postData.media && postData.media.length > 0) {
+                const mainMediaURL = postData.media[0];
+                displayMainMedia(mainMediaURL);
 
+                // 썸네일 갤러리에 나머지 미디어 추가
+                postData.media.forEach((mediaURL, index) => {
+                    if (index > 0) {
+                        createThumbnail(mediaURL, index);
+                    }
+                });
+            } else {
+                mainMediaContainer.innerHTML = '<p>No media available</p>';
+            }
+
+            // 게시물 정보 표시
             postInfoSection.innerHTML = `
-                <p><strong>Product Number:</strong> ${postData.productNumber || 'N/A'}</p>
+                <p><strong>Product Name:</strong> ${postData.name || 'N/A'}</p>
                 <p><strong>Type:</strong> ${Array.isArray(postData.type) ? postData.type.join(', ') : postData.type || 'N/A'}</p>
                 <p><strong>Size:</strong> ${postData.size || 'N/A'}</p>
                 <p><strong>Weight:</strong> ${postData.weight || 'N/A'}g</p>
@@ -44,7 +57,7 @@ const loadPostDetail = async () => {
     }
 };
 
-// 메인 미디어 표시
+// 메인 미디어 표시 함수
 const displayMainMedia = (mediaURL) => {
     const mediaType = mediaURL.split('.').pop().split('?')[0];
     mainMediaContainer.innerHTML = '';
@@ -52,10 +65,10 @@ const displayMainMedia = (mediaURL) => {
         const videoElement = document.createElement('video');
         videoElement.src = mediaURL;
         videoElement.controls = true;
-        videoElement.autoplay = true;
-        videoElement.loop = true;
-        videoElement.muted = true;
-        videoElement.style.width = '80%';
+        videoElement.autoplay = true; // 자동 재생
+        videoElement.loop = true; // 무한 반복
+        videoElement.muted = true; // 자동 재생 시 무음 설정
+        videoElement.style.width = '80%'; // 동영상 크기
         mainMediaContainer.appendChild(videoElement);
     } else {
         const imgElement = document.createElement('img');
@@ -66,23 +79,26 @@ const displayMainMedia = (mediaURL) => {
     }
 };
 
-// 썸네일 생성
+// 썸네일 생성 함수
 const createThumbnail = (mediaURL, index) => {
     const imgElement = document.createElement('img');
     imgElement.src = mediaURL;
     imgElement.alt = `Thumbnail ${index}`;
     imgElement.style.cursor = 'pointer';
-    imgElement.addEventListener('click', () => displayMainMedia(mediaURL));
+    imgElement.addEventListener('click', () => {
+        displayMainMedia(mediaURL);
+    });
     thumbnailGallery.appendChild(imgElement);
 };
 
-// 게시물 삭제
+// 게시물 삭제 함수
 const deletePost = async () => {
-    if (confirm("Are you sure you want to delete this post?")) {
+    const confirmation = confirm("Are you sure you want to delete this post?");
+    if (confirmation) {
         try {
-            await deleteDoc(doc(db, "posts", postId));
+            await deleteDoc(doc(db, "posts", postId)); // Firestore에서 게시물 삭제
             alert("Post deleted successfully.");
-            window.location.href = 'dashboard.html';
+            window.location.href = 'dashboard.html'; // 대시보드로 리다이렉트
         } catch (error) {
             console.error("Error deleting post:", error);
             alert("Failed to delete post.");
@@ -90,19 +106,31 @@ const deletePost = async () => {
     }
 };
 
-// 페이지가 로드된 후 관리자 권한 확인 및 이벤트 리스너 추가
-document.addEventListener('DOMContentLoaded', async () => {
-    const isAdmin = await checkAdminPermission();
+// 페이지가 로드된 후 이벤트 리스너 추가
+document.addEventListener('DOMContentLoaded', () => {
+    const homeButton = document.getElementById('home-btn');
+    const editButton = document.getElementById('edit-btn');
+    const deleteButton = document.getElementById('delete-btn'); // 삭제 버튼
 
-    // 관리자가 아니면 수정, 삭제 버튼 숨김
-    if (!isAdmin) {
-        document.getElementById('edit-btn').style.display = 'none';
-        document.getElementById('delete-btn').style.display = 'none';
+    // Home 버튼 이벤트 리스너
+    if (homeButton) {
+        homeButton.addEventListener('click', () => {
+            window.location.href = 'dashboard.html'; // 대시보드 페이지로 이동
+        });
     }
 
-    document.getElementById('home-btn').addEventListener('click', () => window.location.href = 'dashboard.html');
-    document.getElementById('edit-btn').addEventListener('click', () => window.location.href = `edit.html?id=${postId}`);
-    document.getElementById('delete-btn').addEventListener('click', deletePost);
+    // Edit 버튼 이벤트 리스너
+    if (editButton) {
+        editButton.addEventListener('click', () => {
+            window.location.href = `edit.html?id=${postId}`; // 수정 페이지로 이동
+        });
+    }
 
+    // Delete 버튼 이벤트 리스너
+    if (deleteButton) {
+        deleteButton.addEventListener('click', deletePost); // 삭제 버튼 클릭 시 삭제 함수 호출
+    }
+
+    // 게시물 세부 정보 로드
     loadPostDetail();
 });
