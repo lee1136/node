@@ -27,10 +27,11 @@ registerForm.addEventListener('submit', async (e) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Firestore에 사용자 정보 저장
+        // Firestore에 사용자 정보 저장 (admin 필드 추가)
         await setDoc(doc(db, 'users', userId), {
             uid: user.uid,
             createdAt: new Date(),
+            admin: false  // 기본적으로 일반 유저로 설정
         });
 
         alert('회원가입 성공! 로그인 페이지로 이동합니다.');
