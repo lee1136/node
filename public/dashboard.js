@@ -25,7 +25,6 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
 
         // 페이징 처리
         if (isNextPage && lastVisible) {
-            console.log('Loading next page, starting after:', lastVisible);
             postQuery = query(currentQuery, startAfter(lastVisible), limit(pageSize)); // 이전 쿼리의 마지막 문서부터 시작
         }
 
@@ -35,16 +34,14 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
         // 마지막으로 로드한 문서를 저장하여 다음 페이지에서 사용
         if (postSnapshot.docs.length > 0) {
             lastVisible = postSnapshot.docs[postSnapshot.docs.length - 1]; // 마지막 문서 저장
-            console.log('New lastVisible:', lastVisible);
         } else {
-            console.log('No more posts to load.');
             lastVisible = null; // 더 이상 게시물이 없으면 lastVisible을 null로 설정
         }
 
         currentQuery = postQuery; // 현재 쿼리 저장
 
         const postGrid = document.getElementById('post-grid');
-        postGrid.innerHTML = '';
+        postGrid.innerHTML = ''; // 기존 게시물 초기화
 
         if (postList.length === 0) {
             postGrid.innerHTML = '<p>No posts available</p>';
@@ -100,7 +97,6 @@ const checkAdminPrivileges = async (user) => {
     try {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
-            // Firestore의 admin 필드를 사용하여 관리자 여부 확인
             isAdmin = userDoc.data().admin || false;
             console.log('Admin status:', isAdmin); // 관리자인지 확인
 
@@ -123,6 +119,12 @@ const checkAdminPrivileges = async (user) => {
 
 // 페이지가 로드된 후에 이벤트 리스너 및 초기 데이터를 불러옴
 document.addEventListener('DOMContentLoaded', () => {
+    // 버튼을 숨기고 시작 (관리자 확인 후에만 버튼 표시)
+    const uploadButton = document.getElementById('upload-btn');
+    const signupButton = document.getElementById('signup-btn');
+    if (uploadButton) uploadButton.style.display = 'none';
+    if (signupButton) signupButton.style.display = 'none';
+
     // Firebase 인증 상태 변화 감지
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -149,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 업로드 버튼 클릭 시 업로드 페이지로 이동
-    const uploadButton = document.getElementById('upload-btn');
     if (uploadButton) {
         uploadButton.addEventListener('click', () => {
             window.location.href = 'upload.html'; // 업로드 페이지로 이동
@@ -157,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
-    const signupButton = document.getElementById('signup-btn');
     if (signupButton) {
         signupButton.addEventListener('click', () => {
             window.location.href = 'signup.html';  // 회원가입 페이지로 이동
