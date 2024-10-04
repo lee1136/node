@@ -1,7 +1,8 @@
-import { db } from './firebaseConfig.js';
+import { db, auth } from './firebaseConfig.js';
 import { collection, getDocs, query, where, limit, startAfter } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
+let isAdmin = false;
 let lastVisible = null; // 마지막으로 로드한 게시물의 참조를 저장
 const pageSize = 2; // 한 페이지당 게시물 수
 let currentQuery = null; // 현재 쿼리 저장 (검색 쿼리 및 Type 필터링 포함)
@@ -19,7 +20,7 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
 
         // 검색어가 입력된 경우
         if (searchTerm) {
-            postQuery = query(postCollection, where("productNumber", ">=", searchTerm), where("productNumber", "<=", searchTerm + '\uf8ff'), limit(pageSize));
+            postQuery = query(postCollection, where("name", ">=", searchTerm), where("name", "<=", searchTerm + '\uf8ff'), limit(pageSize));
         }
 
         // 페이징 처리
@@ -39,7 +40,7 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
             console.log('No more posts to load.');
             lastVisible = null; // 더 이상 게시물이 없으면 lastVisible을 null로 설정
         }
-        
+
         currentQuery = postQuery; // 현재 쿼리 저장
 
         const postGrid = document.getElementById('post-grid');
@@ -68,7 +69,7 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
                 // 이미지 파일일 경우 이미지 태그 생성
                 const imgElement = document.createElement('img');
                 imgElement.src = thumbnailURL;
-                imgElement.alt = `Thumbnail for post ${post.productNumber}`;
+                imgElement.alt = `Thumbnail for post ${post.name}`;
                 postElement.appendChild(imgElement);
             }
 
@@ -94,43 +95,35 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
     }
 };
 
-// 관리자 권한 확인 함수
-const checkAdmin = async () => {
-    return new Promise((resolve, reject) => {
-        const auth = getAuth();
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists() && userDoc.data().isAdmin) {
-                    resolve(true); // 관리자
-                } else {
-                    resolve(false); // 관리자 아님
-                }
-            } else {
-                resolve(false); // 로그인하지 않음
-            }
-        });
-    });
-};
+// 관리자 여부 확인 함수
+const checkAdminPrivileges = async (user) => {
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+        isAdmin = userDoc.data().isAdmin || false;
+    }
 
-// 페이지가 로드된 후에 이벤트 리스너 및 초기 데이터를 불러옴
-document.addEventListener('DOMContentLoaded', async () => {
-    // 게시물 목록 로드
-    loadPosts();
-
-    // 관리자 권한 확인
-    const isAdmin = await checkAdmin();
-
+    // 버튼 표시 여부 설정
     const uploadButton = document.getElementById('upload-btn');
     const signupButton = document.getElementById('signup-btn');
-
-    if (isAdmin) {
-        uploadButton.style.display = 'block';
-        signupButton.style.display = 'block';
-    } else {
+    if (!isAdmin) {
         uploadButton.style.display = 'none';
         signupButton.style.display = 'none';
     }
+};
+
+// 페이지가 로드된 후에 이벤트 리스너 및 초기 데이터를 불러옴
+document.addEventListener('DOMContentLoaded', () => {
+    // Firebase 인증 상태 변화 감지
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            checkAdminPrivileges(user);  // 관리자 여부 확인
+        } else {
+            console.log('User is not signed in.');
+        }
+    });
+
+    // 게시물 목록 로드
+    loadPosts();
 
     // 검색 기능 처리
     const searchInput = document.getElementById('search-input');
@@ -146,6 +139,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // 업로드 버튼 클릭 시 업로드 페이지로 이동
+    const uploadButton = document.getElementById('upload-btn');
     if (uploadButton) {
         uploadButton.addEventListener('click', () => {
             window.location.href = 'upload.html'; // 업로드 페이지로 이동
@@ -153,6 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
+    const signupButton = document.getElementById('signup-btn');
     if (signupButton) {
         signupButton.addEventListener('click', () => {
             window.location.href = 'signup.html';  // 회원가입 페이지로 이동
