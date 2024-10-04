@@ -101,11 +101,16 @@ const checkAdminPrivileges = async (user) => {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
             isAdmin = userDoc.data().isAdmin || false;
+            console.log('Admin status:', isAdmin); // 관리자인지 확인
         }
 
         // 버튼 표시 여부 설정
         const uploadButton = document.getElementById('upload-btn');
         const signupButton = document.getElementById('signup-btn');
+
+        console.log('Upload button:', uploadButton); // 버튼 요소 확인
+        console.log('Signup button:', signupButton); // 버튼 요소 확인
+
         if (!isAdmin) {
             if (uploadButton) uploadButton.style.display = 'none';
             if (signupButton) signupButton.style.display = 'none';
@@ -123,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Firebase 인증 상태 변화 감지
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            console.log('User is signed in:', user.uid); // 사용자 로그인 상태 확인
             checkAdminPrivileges(user);  // 관리자 여부 확인
         } else {
             console.log('User is not signed in.');
@@ -149,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nextPageButton.addEventListener('click', () => loadPosts(true)); // 다음 페이지 로드
     }
 
-    // 업로드 버튼 클릭 시 업로드 페이지로 이동
+     // 업로드 버튼 클릭 시 업로드 페이지로 이동
     const uploadButton = document.getElementById('upload-btn');
     if (uploadButton) {
         uploadButton.addEventListener('click', () => {
