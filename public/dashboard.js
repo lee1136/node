@@ -41,7 +41,7 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
         currentQuery = postQuery; // 현재 쿼리 저장
 
         const postGrid = document.getElementById('post-grid');
-        postGrid.innerHTML = '';
+        postGrid.innerHTML = ''; // 기존 게시물 초기화
 
         if (postList.length === 0) {
             postGrid.innerHTML = '<p>No posts available</p>';
@@ -99,18 +99,18 @@ const checkAdminPrivileges = async (user) => {
         if (userDoc.exists()) {
             isAdmin = userDoc.data().isAdmin || false;
             console.log('Admin status:', isAdmin); // 관리자인지 확인
-        }
 
-        // 버튼 표시 여부 설정
-        const uploadButton = document.getElementById('upload-btn');
-        const signupButton = document.getElementById('signup-btn');
+            // 버튼 표시 여부 설정
+            const uploadButton = document.getElementById('upload-btn');
+            const signupButton = document.getElementById('signup-btn');
 
-        if (!isAdmin) {
-            if (uploadButton) uploadButton.style.display = 'none';
-            if (signupButton) signupButton.style.display = 'none';
-        } else {
-            if (uploadButton) uploadButton.style.display = 'block';
-            if (signupButton) signupButton.style.display = 'block';
+            if (!isAdmin) {
+                if (uploadButton) uploadButton.style.display = 'none';
+                if (signupButton) signupButton.style.display = 'none';
+            } else {
+                if (uploadButton) uploadButton.style.display = 'block';
+                if (signupButton) signupButton.style.display = 'block';
+            }
         }
     } catch (error) {
         console.error('Error checking admin privileges:', error);
