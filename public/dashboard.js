@@ -97,17 +97,24 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
 
 // 관리자 여부 확인 함수
 const checkAdminPrivileges = async (user) => {
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    if (userDoc.exists()) {
-        isAdmin = userDoc.data().isAdmin || false;
-    }
+    try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+            isAdmin = userDoc.data().isAdmin || false;
+        }
 
-    // 버튼 표시 여부 설정
-    const uploadButton = document.getElementById('upload-btn');
-    const signupButton = document.getElementById('signup-btn');
-    if (!isAdmin) {
-        uploadButton.style.display = 'none';
-        signupButton.style.display = 'none';
+        // 버튼 표시 여부 설정
+        const uploadButton = document.getElementById('upload-btn');
+        const signupButton = document.getElementById('signup-btn');
+        if (!isAdmin) {
+            if (uploadButton) uploadButton.style.display = 'none';
+            if (signupButton) signupButton.style.display = 'none';
+        } else {
+            if (uploadButton) uploadButton.style.display = 'block';
+            if (signupButton) signupButton.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Error checking admin privileges:', error);
     }
 };
 
@@ -119,6 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
             checkAdminPrivileges(user);  // 관리자 여부 확인
         } else {
             console.log('User is not signed in.');
+            const uploadButton = document.getElementById('upload-btn');
+            const signupButton = document.getElementById('signup-btn');
+            if (uploadButton) uploadButton.style.display = 'none';
+            if (signupButton) signupButton.style.display = 'none';
         }
     });
 
