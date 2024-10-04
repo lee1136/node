@@ -1,6 +1,6 @@
 // Firestore 모듈 불러오기
 import { db } from './firebaseConfig.js';
-import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"; // 삭제를 위한 deleteDoc 추가
+import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // 게시물 ID 가져오기
 const urlParams = new URLSearchParams(window.location.search);
@@ -23,6 +23,11 @@ const loadPostDetail = async () => {
         const postDoc = await getDoc(doc(db, "posts", postId));
         if (postDoc.exists()) {
             const postData = postDoc.data();
+            
+            // productNumber 확인
+            console.log('Product Number:', postData.productNumber);
+            
+            // 게시물 이름(품번) 설정
             postNameElement.textContent = postData.productNumber || "No Product Number";
 
             // 메인 미디어 표시
