@@ -2,9 +2,9 @@ import { db, auth } from './firebaseConfig.js';
 import { collection, getDocs, query, where, limit, startAfter, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-let isAdmin = false;
+let isAdmin = false; // 관리자인지 여부 확인
 let lastVisible = null; // 마지막으로 로드한 게시물의 참조를 저장
-const pageSize = 42; // 한 페이지당 게시물 수
+const pageSize = 2; // 한 페이지당 게시물 수
 let currentQuery = null; // 현재 쿼리 저장 (검색 쿼리 및 Type 필터링 포함)
 
 // Firestore에서 데이터를 로드하여 대시보드에 표시하는 함수
@@ -56,14 +56,12 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
             postElement.classList.add('post-item');
 
             if (mediaType === 'mp4' || mediaType === 'webm' || mediaType === 'ogg') {
-                // 영상 파일일 경우 비디오 태그 생성
                 const videoElement = document.createElement('video');
                 videoElement.src = thumbnailURL;
-                videoElement.controls = true;  // 비디오 컨트롤러 추가
-                videoElement.style.width = '100%';  // 비디오 크기 조정
+                videoElement.controls = true;
+                videoElement.style.width = '100%'; 
                 postElement.appendChild(videoElement);
             } else {
-                // 이미지 파일일 경우 이미지 태그 생성
                 const imgElement = document.createElement('img');
                 imgElement.src = thumbnailURL;
                 imgElement.alt = `Thumbnail for post ${post.name}`;
@@ -72,7 +70,7 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
 
             // 게시물을 클릭하면 상세 페이지로 이동
             postElement.addEventListener('click', () => {
-                window.location.href = `detail.html?id=${post.id}`;  // 제품 ID를 URL에 포함
+                window.location.href = `detail.html?id=${post.id}`;
             });
 
             postGrid.appendChild(postElement);
@@ -81,9 +79,9 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
         // "다음 페이지" 버튼 표시 여부 결정
         const nextPageButton = document.getElementById('next-page-btn');
         if (postList.length < pageSize || !lastVisible) {
-            nextPageButton.style.display = 'none'; // 더 이상 게시물이 없으면 숨김
+            nextPageButton.style.display = 'none';
         } else {
-            nextPageButton.style.display = 'block'; // 다음 페이지가 있을 경우 표시
+            nextPageButton.style.display = 'block';
         }
     } catch (error) {
         console.error('Error loading posts:', error);
@@ -92,32 +90,28 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
     }
 };
 
-// 관리자 여부 확인 함수
+// Firestore에서 관리자 권한 확인
 const checkAdminPrivileges = async (user) => {
-    try {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-            const userData = userDoc.data();
-            isAdmin = userData.admin || false;
-            console.log("Admin status: ", isAdmin);
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (userDoc.exists()) {
+        isAdmin = userDoc.data().admin || false; // admin 필드 확인
+    }
 
-            const uploadButton = document.getElementById('upload-btn');
-            const signupButton = document.getElementById('signup-btn');
-
-            if (!isAdmin) {
-                if (uploadButton) uploadButton.style.display = 'none';
-                if (signupButton) signupButton.style.display = 'none';
-            } else {
-                if (uploadButton) uploadButton.style.display = 'block';
-                if (signupButton) signupButton.style.display = 'block';
-            }
-        }
-    } catch (error) {
-        console.error("Error checking admin privileges:", error);
+    const uploadButton = document.getElementById('upload-btn');
+    const signupButton = document.getElementById('signup-btn');
+    
+    if (isAdmin) {
+        // 관리자인 경우 버튼 표시
+        uploadButton.style.display = 'block';
+        signupButton.style.display = 'block';
+    } else {
+        // 관리자가 아닌 경우 버튼 숨기기
+        uploadButton.style.display = 'none';
+        signupButton.style.display = 'none';
     }
 };
 
-// 페이지가 로드된 후에 이벤트 리스너 및 초기 데이터를 불러옴
+// 페이지가 로드된 후 이벤트 리스너 및 초기 데이터 로드
 document.addEventListener('DOMContentLoaded', () => {
     // Firebase 인증 상태 변화 감지
     onAuthStateChanged(auth, (user) => {
@@ -135,20 +129,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.trim();
-        loadPosts(false, searchTerm); // 검색어가 변경될 때마다 검색
+        loadPosts(false, searchTerm); 
     });
 
-    // 다음 페이지로 이동하는 함수
+    // 다음 페이지로 이동
     const nextPageButton = document.getElementById('next-page-btn');
     if (nextPageButton) {
-        nextPageButton.addEventListener('click', () => loadPosts(true)); // 다음 페이지 로드
+        nextPageButton.addEventListener('click', () => loadPosts(true));
     }
 
     // 업로드 버튼 클릭 시 업로드 페이지로 이동
     const uploadButton = document.getElementById('upload-btn');
     if (uploadButton) {
         uploadButton.addEventListener('click', () => {
-            window.location.href = 'upload.html'; // 업로드 페이지로 이동
+            window.location.href = 'upload.html';
         });
     }
 
@@ -156,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const signupButton = document.getElementById('signup-btn');
     if (signupButton) {
         signupButton.addEventListener('click', () => {
-            window.location.href = 'signup.html';  // 회원가입 페이지로 이동
+            window.location.href = 'signup.html';
         });
     }
 });
