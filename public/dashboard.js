@@ -100,7 +100,7 @@ const checkAdminPrivileges = async (user) => {
         const uploadButton = document.getElementById('upload-btn');
         const signupButton = document.getElementById('signup-btn');
 
-        // 기본적으로 버튼을 숨기고 관리자일 경우에만 표시
+        // 관리자라면 버튼을 표시, 그렇지 않으면 숨김
         if (isAdmin) {
             uploadButton.style.display = 'block';
             signupButton.style.display = 'block';
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadButton = document.getElementById('upload-btn');
     const signupButton = document.getElementById('signup-btn');
 
-    // 페이지 로딩 시 버튼을 숨긴다 (일단 관리자인지 확인 전에는 보이지 않도록)
+    // 페이지 로딩 시 버튼을 숨기고 관리자 확인 후에만 다시 표시
     uploadButton.style.display = 'none';
     signupButton.style.display = 'none';
 
@@ -127,6 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
             checkAdminPrivileges(user);  // 관리자 여부 확인
         } else {
             console.log('User is not signed in.');
+            uploadButton.style.display = 'none';
+            signupButton.style.display = 'none';
         }
     });
 
