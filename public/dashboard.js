@@ -90,24 +90,27 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
     }
 };
 
-// Firestore에서 관리자 권한 확인
+// 관리자 여부 확인 함수
 const checkAdminPrivileges = async (user) => {
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    if (userDoc.exists()) {
-        isAdmin = userDoc.data().admin || false; // admin 필드 확인
-    }
+    try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+            isAdmin = userDoc.data().admin || false;  // admin 필드 확인
+            console.log('Is Admin:', isAdmin);
+        }
 
-    const uploadButton = document.getElementById('upload-btn');
-    const signupButton = document.getElementById('signup-btn');
-    
-    if (isAdmin) {
-        // 관리자인 경우 버튼 표시
-        uploadButton.style.display = 'block';
-        signupButton.style.display = 'block';
-    } else {
-        // 관리자가 아닌 경우 버튼 숨기기
-        uploadButton.style.display = 'none';
-        signupButton.style.display = 'none';
+        // 버튼 표시 여부 설정
+        const uploadButton = document.getElementById('upload-btn');
+        const signupButton = document.getElementById('signup-btn');
+        if (isAdmin) {
+            uploadButton.style.display = 'block';  // 관리자인 경우 버튼 표시
+            signupButton.style.display = 'block';
+        } else {
+            uploadButton.style.display = 'none';  // 관리자가 아닌 경우 숨김
+            signupButton.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error checking admin privileges:', error);
     }
 };
 
