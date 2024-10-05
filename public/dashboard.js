@@ -96,45 +96,43 @@ const loadPosts = async (isNextPage = false, searchTerm = '', selectedType = '')
 };
 
 // 관리자 여부 확인 함수
-// 관리자 여부 확인 함수
 const checkAdminPrivileges = async (user) => {
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    if (userDoc.exists()) {
-        const userData = userDoc.data();
-        isAdmin = userData.admin || false;  // admin 필드를 확인
-    }
+    try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+            const userData = userDoc.data();
+            isAdmin = userData.admin || false;  // admin 필드를 확인
+        }
 
-    // 버튼 표시 여부 설정
-    const uploadButton = document.getElementById('upload-btn');
-    const signupButton = document.getElementById('signup-btn');
-    
-    if (!isAdmin) {
-        uploadButton.style.display = 'none';
-        signupButton.style.display = 'none';
-    } else {
-        uploadButton.style.display = 'block';
-        signupButton.style.display = 'block';
+        // 버튼 표시 여부 설정
+        const uploadButton = document.getElementById('upload-btn');
+        const signupButton = document.getElementById('signup-btn');
+        
+        if (isAdmin) {
+            uploadButton.style.display = 'block';
+            signupButton.style.display = 'block';
+        } else {
+            uploadButton.style.display = 'none';
+            signupButton.style.display = 'none';
+        }
+    } catch (error) {
+        console.error('Error checking admin privileges:', error);
     }
 };
-
 
 // 페이지가 로드된 후에 이벤트 리스너 및 초기 데이터를 불러옴
 document.addEventListener('DOMContentLoaded', () => {
     // Firebase 인증 상태 변화 감지
     onAuthStateChanged(auth, (user) => {
         if (user) {
-            checkAdminPrivileges(user);  // 관리자 여부 확인 후 버튼 제어
-            // 게시물 목록 로드
-            loadPosts();
+            checkAdminPrivileges(user);  // 관리자 여부 확인
         } else {
             console.log('User is not signed in.');
-            // 로그아웃된 경우 버튼 숨기기
-            const uploadButton = document.getElementById('upload-btn');
-            const signupButton = document.getElementById('signup-btn');
-            if (uploadButton) uploadButton.style.display = 'none';
-            if (signupButton) signupButton.style.display = 'none';
         }
     });
+
+    // 게시물 목록 로드
+    loadPosts();
 
     // 검색 기능 처리
     const searchInput = document.getElementById('search-input');
