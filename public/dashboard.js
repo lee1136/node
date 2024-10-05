@@ -94,22 +94,23 @@ const checkAdminPrivileges = async (user) => {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
             const userData = userDoc.data();
-            isAdmin = userData.admin || false;  // admin 필드 확인
-        }
-
-        const uploadButton = document.getElementById('upload-btn');
-        const signupButton = document.getElementById('signup-btn');
-
-        // 관리자라면 버튼을 표시, 그렇지 않으면 숨김
-        if (isAdmin) {
-            uploadButton.style.display = 'block';
-            signupButton.style.display = 'block';
-        } else {
-            uploadButton.style.display = 'none';
-            signupButton.style.display = 'none';
+            console.log("Admin status: ", userData.admin);  // 관리자 여부 확인을 위한 로그
+            isAdmin = userData.admin || false;
         }
     } catch (error) {
-        console.error('Error checking admin privileges:', error);
+        console.error("Error fetching admin status: ", error);
+    }
+
+    // 버튼 표시 여부 설정
+    const uploadButton = document.getElementById('upload-btn');
+    const signupButton = document.getElementById('signup-btn');
+
+    if (!isAdmin) {
+        if (uploadButton) uploadButton.style.display = 'none';
+        if (signupButton) signupButton.style.display = 'none';
+    } else {
+        if (uploadButton) uploadButton.style.display = 'block';
+        if (signupButton) signupButton.style.display = 'block';
     }
 };
 
