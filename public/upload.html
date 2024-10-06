@@ -1,79 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Page</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <title>게시물 업로드</title>
+    <link rel="stylesheet" href="upload.css">
 </head>
 <body>
     <header>
-        <h1>Upload New Post</h1>
-        <button id="back-btn">Back</button>
+        <h1>게시물 업로드</h1>
+        <button id="backBtn">뒤로 가기</button>
     </header>
 
-    <!-- 로딩 오버레이 -->
-    <div id="loading-overlay" style="display: none;">
-        <div class="loading-message">Uploading... Please wait.</div>
-    </div>
-
-    <section id="upload-section">
-        <!-- 미리보기 영역 -->
-        <div id="preview-grid"></div>
-
-        <form id="upload-form">
-            <!-- 미디어 파일 업로드 -->
-            <label for="mediaFiles">Media Files (Select at least one image or video):</label>
-            <input type="file" id="mediaFiles" accept="image/*,video/*" multiple required>
-
-            <!-- 이름 입력 필드 -->
-            <label for="product-name">Name:</label>
-            <input type="text" id="product-name" placeholder="Enter product name" required>
-
-            <!-- 종류 선택 (중복 선택 가능) -->
-            <label for="type">Type:</label>
-            <div id="type-container">
-                <input type="checkbox" id="type-14k" value="14K">
-                <label for="type-14k">14K</label>
-                
-                <input type="checkbox" id="type-18k" value="18K">
-                <label for="type-18k">18K</label>
-                
-                <input type="checkbox" id="type-24k" value="24K">
-                <label for="type-24k">24K</label>
-                
-                <input type="checkbox" id="type-925" value="925">
-                <label for="type-925">925</label>
+    <section id="uploadSection">
+        <form id="uploadForm">
+            <!-- 미디어 업로드 및 미리보기 -->
+            <div id="mediaPreview">
+                <!-- 미디어 미리보기가 여기에 표시됩니다 -->
             </div>
+            
+            <label for="fileInput">파일 선택:</label>
+            <input type="file" id="fileInput" multiple accept="image/*,video/*">
 
-            <!-- 사이즈와 중량을 한 줄에 배치 -->
-            <div id="size-weight-container">
-                <div id="size-container">
-                    <label for="size">Size:</label>
-                    <input type="number" id="size" placeholder="00" required>
-                    <select id="size-unit" required>
-                        <option value="cm">cm</option>
-                        <option value="호">호</option>
-                    </select>
-                </div>
+            <label for="productNumber">품번:</label>
+            <input type="text" id="productNumber" required>
 
-                <div id="weight-container">
-                    <label for="weight">Weight:</label>
-                    <input type="number" id="weight" name="weight" step="0.01" min="0" placeholder="Enter weight" required>
-                    <span>g</span>
-                </div>
-            </div>
+            <label for="type">종류:</label>
+            <select id="type" required>
+                <option value="14K">14K</option>
+                <option value="18K">18K</option>
+                <option value="24K">24K</option>
+                <option value="925">925</option>
+            </select>
 
-            <!-- 내용 입력 -->
-            <label for="content">Content:</label>
-            <textarea id="content" placeholder="Enter content"></textarea>
+            <label for="size">사이즈:</label>
+            <input type="number" id="size" step="0.01" required>
+            <select id="sizeUnit">
+                <option value="cm">cm</option>
+                <option value="호">호</option>
+            </select>
 
-            <!-- 제출 버튼 -->
-            <button type="submit">Upload Post</button>
+            <label for="weight">중량:</label>
+            <input type="number" id="weight" step="0.01" required>g
+
+            <label for="additionalContent">추가 내용:</label>
+            <textarea id="additionalContent" rows="4"></textarea>
+
+            <button type="submit" id="submitBtn">업로드</button>
         </form>
     </section>
 
-    <script type="module" src="firebaseConfig.js"></script>
-    <script type="module" src="upload.js"></script>
+    <script src="firebase.js" type="module"></script>
+    <script src="upload.js" type="module"></script>
 </body>
 </html>
